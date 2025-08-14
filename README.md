@@ -24,24 +24,17 @@ Some of the checklists in this doc are for our scouts and some of them are for *
 ---
 
 # Solana Foundation audit details
-- Total Prize Pool: $203500 in USDC
-  - HM awards: up to XXX XXX USDC (Notion: HM (main) pool)
+- Total Prize Pool: $203,500 in USDC
+  - HM awards: up to $192,000 in USDC 
     - If no valid Highs or Mediums are found, the HM pool is $0 
-  - QA awards: $8000 in USDC
-  - Judge awards: $3000 in USDC
+  - QA awards: $8,000 in USDC
+  - Judge awards: $3,000 in USDC
   - Scout awards: $500 in USDC
-  - (this line can be removed if there is no mitigation) Mitigation Review: XXX XXX USDC
 - [Read our guidelines for more details](https://docs.code4rena.com/competitions)
-- Starts XXX XXX XX 20:00 UTC (ex. `Starts March 22, 2023 20:00 UTC`)
-- Ends XXX XXX XX 20:00 UTC (ex. `Ends March 30, 2023 20:00 UTC`)
+- Starts August 19th, 2025 20:00 UTC
+- Ends September 15, 2025 20:00 UTC
 
 **❗ Important notes for wardens** 
-## 🐺 C4 staff: delete the PoC requirement section if not applicable - i.e. for non-Solidity/EVM audits.
-1. A coded, runnable PoC is required for all High/Medium submissions to this audit. 
-  - This repo includes a basic template to run the test suite.
-  - PoCs must use the test suite provided in this repo.
-  - Your submission will be marked as Insufficient if the POC is not runnable and working with the provided test suite.
-  - Exception: PoC is optional (though recommended) for wardens with signal ≥ 0.68.
 1. Judging phase risk adjustments (upgrades/downgrades):
   - High- or Medium-risk submissions downgraded by the judge to Low-risk (QA) will be ineligible for awards.
   - Upgrading a Low-risk finding from a QA report to a Medium- or High-risk finding is not supported.
@@ -52,7 +45,110 @@ Some of the checklists in this doc are for our scouts and some of them are for *
 The 4naly3er report can be found [here](https://github.com/code-423n4/2025-07-solana-foundation/blob/main/4naly3er-report.md).
 
 _Note for C4 wardens: Anything included in this `Automated Findings / Publicly Known Issues` section is considered a publicly known issue and is ineligible for awards._
-## 🐺 C4: Begin Gist paste here (and delete this line)
+## 🐺 C4 team: paste this into the bottom of the sponsor's audit repo `README`, then delete this line
 
+The only known issue is that we use a non-standard key-derivation method as described in https://github.com/solana-program/zk-elgamal-proof/issues/35.
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+# Overview
+
+[ ⭐️ SPONSORS: add info here ]
+
+## Links
+
+- **Previous audits:**  The audit reports can be found in https://github.com/anza-xyz/security-audits under "Token-2022".
+  - ✅ SCOUTS: If there are multiple report links, please format them in a list.
+- **Documentation:** https://edge.docs.anza.xyz/runtime/zk-elgamal-proof
+- **Website:** https://solana.org/
+- **X/Twitter:** https://x.com/SolanaFndn
+
+---
+
+# Scope
+
+[ ✅ SCOUTS: add scoping and technical details here ]
+
+### Files in scope
+- ✅ This should be completed using the `metrics.md` file
+- ✅ Last row of the table should be Total: SLOC
+- ✅ SCOUTS: Have the sponsor review and and confirm in text the details in the section titled "Scoping Q amp; A"
+
+*For sponsors that don't use the scoping tool: list all files in scope in the table below (along with hyperlinks) -- and feel free to add notes to emphasize areas of focus.*
+
+| Contract | SLOC | Purpose | Libraries used |  
+| ----------- | ----------- | ----------- | ----------- |
+| [contracts/folder/sample.sol](https://github.com/code-423n4/repo-name/blob/contracts/folder/sample.sol) | 123 | This contract does XYZ | [`@openzeppelin/*`](https://openzeppelin.com/contracts/) |
+
+### Files out of scope
+✅ SCOUTS: List files/directories out of scope
+
+# Additional context
+
+## Areas of concern (where to focus for bugs)
+- Does the rust proof generation/verification implementation faithfully follow the protocol specification of https://edge.docs.anza.xyz/runtime/zk-elgamal-proof and https://eprint.iacr.org/2017/1066?
+- Managing the merlin transcript in the proof implementation has been tricky. Are all necessary components like the zk public statements and all proof components hashed into the transcript
+- We use a concept called the proof context to divide up long proofs into multiple chunks. Are there any security issues during the creation or deletion of these context states?
+- Multiple proofs are used to instructions like the transfer and transfer with fee. The consistency between these proofs have be meticulously checked. Are our consistency checks sound?
+- Likewise, proof components have to be checked for consistency with the actual token22 instruction data. Are our consistency checks sound?
+- The confidential transfer extension was originally developed independently of other token22 extensions. Are there any security issues involved in how the confidential transfer extensions interact with other extensions?
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## Main invariants
+
+N/A
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## All trusted roles in the protocol
+
+N/A
+
+✅ SCOUTS: Please format the response above 👆 using the template below👇
+
+| Role                                | Description                       |
+| --------------------------------------- | ---------------------------- |
+| Owner                          | Has superpowers                |
+| Administrator                             | Can change fees                       |
+
+✅ SCOUTS: Please format the response above 👆 so its not a wall of text and its readable.
+
+## Running tests
+
+ZK-SDK:
+git clone https://github.com/solana-program/zk-elgamal-proof
+pnpm install
+pnpm zk-sdk:test
+
+Token22
+git clone https://github.com/solana-program/token-2022
+pnpm install
+pnpm programs:test
+pnpm clients:rust:test
+pnpm confidential-transfer:proof-tests:test
+
+✅ SCOUTS: Please format the response above 👆 using the template below👇
+
+```bash
+git clone https://github.com/code-423n4/2023-08-arbitrum
+git submodule update --init --recursive
+cd governance
+foundryup
+make install
+make build
+make sc-election-test
+```
+To run code coverage
+```bash
+make coverage
+```
+
+✅ SCOUTS: Add a screenshot of your terminal showing the test coverage
+
+## Miscellaneous
+Employees of Solana Foundation and employees' family members are ineligible to participate in this audit.
+
+Code4rena's rules cannot be overridden by the contents of this README. In case of doubt, please check with C4 staff.
 
 
