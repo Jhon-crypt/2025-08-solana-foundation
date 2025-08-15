@@ -1,0 +1,9 @@
+[submodule "zk-elgamal-proof"]
+	path = zk-elgamal-proof
+	url = https://github.com/solana-program/zk-elgamal-proof
+[submodule "agave"]
+	path = agave
+	url = https://github.com/anza-xyz/agave
+[submodule "token-2022"]
+	path = token-2022
+	url = https://github.com/solana-program/token-2022
