@@ -49,24 +49,41 @@ There are two primary components that enable confidential transfers. The first i
 
 The scope of the audit covers the following components:
 
-- **The zk-sdk**
-  - Contains the core cryptographic logic for generating and verifying proofs. The crate is divided into three main components:
-    - Cryptographic Primitives: ElGamal encryption and Pedersen commitments
-    - Proof Systems: sigma proofs and range proofs
-    - Program Components: Client-side logic for interacting with the ZK ElGamal Proof program instructions
+## **The zk-sdk**
 
-- **The ZK ElGamal Proof Program**
-  - While the zk-sdk contains proof generation and client-side verification logic, this repository contains the actual native program logic that is deployed on-chain and executed by Solana validators to verify proofs.
+- Contains the core cryptographic logic for generating and verifying proofs. The crate is divided into three main components:
+  - Cryptographic Primitives: ElGamal encryption and Pedersen commitments
+  - Proof Systems: sigma proofs and range proofs
+  - Program Components: Client-side logic for interacting with the ZK ElGamal Proof program instructions
+- **Files in scope:** All files in https://github.com/solana-program/zk-elgamal-proof/tree/a22038e9481c88281559168d8f153de0629fe3ac/zk-sdk
+- **Files out of scope**: All other files in https://github.com/solana-program/zk-elgamal-proof are out of scope.
 
-- **The Token-2022 Confidential Transfer ZK Logic**
-  - This component contains the specific logic for generating and verifying proofs within the context of the Token-2022 program's state and instructions.
+## **The ZK ElGamal Proof Program**
 
-- **The Token22 program**
-  - This repository contains the full Token-2022 on-chain program. While a full audit of the entire program is out of scope, its role as the primary consumer of the confidential transfer functionality makes it highly relevant. The three extensions that utilize the ZK components are confidential transfer, confidential fee, and confidential mint-burn extensions
+- While the zk-sdk contains proof generation and client-side verification logic, this repository contains the actual native program logic that is deployed on-chain and executed by Solana validators to verify proofs.
+- **Files in scope:** All files in https://github.com/anza-xyz/agave/tree/afed4fcf3a79e115e12e202640b9b7bd36ce9e8b/programs/zk-elgamal-proof
+- **Files out of scope**: The tests live in https://github.com/anza-xyz/agave/tree/afed4fcf3a79e115e12e202640b9b7bd36ce9e8b/programs/zk-elgamal-proof-tests, which are out of scope, but relevant
 
-### Files in scope
+## **The Token-2022 Confidential Transfer ZK Logic**
 
-### Files out of scope
+- This component contains the specific logic for generating and verifying proofs within the context of the Token-2022 program's state and instructions.
+- **Files in scope:** 
+  - https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/confidential-transfer/ciphertext-arithmetic
+  - https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/confidential-transfer/elgamal-registry
+  - https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/confidential-transfer/proof-extraction
+  - https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/confidential-transfer/proof-generation
+- **Files out of scope**: The tests live in https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/confidential-transfer/proof-tests, which are out of scope, but relevant
+
+## **The Token22 program**
+
+- This repository contains the full Token-2022 on-chain program. While a full audit of the entire program is out of scope, its role as the primary consumer of the confidential transfer functionality makes it highly relevant. The three extensions that utilize the ZK components are confidential transfer, confidential fee, and confidential mint-burn extensions
+- **Files in scope:** 
+  - Confidential Transfer extension: https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/program/src/extension/confidential_transfer
+  - Confidential Transfer Fee extension: https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/program/src/extension/confidential_transfer_fee
+  - Confidential Mint and Burn: https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/program/src/extension/confidential_mint_burn
+- **Files out of scope**: 
+  - All files in https://github.com/solana-program/token-2022/tree/2bca49453938c7779d88f8a646d10f4207de2783/program excluding the three extensions above are out of scope
+  - All other files in https://github.com/solana-program/token-2022 not in confidential-transfer and program are out of scope
 
 # Additional context
 
@@ -105,6 +122,11 @@ pnpm install
 pnpm programs:test
 pnpm clients:rust:test
 pnpm confidential-transfer:proof-tests:test
+
+# The ZK ElGamal Proof Program
+git clone https://github.com/anza-xyz/agave
+cd agave/programs/zk-elgamal-proof-tests
+cargo test
 ```
 
 ## Miscellaneous
